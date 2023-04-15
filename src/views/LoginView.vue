@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useLoginStore } from '../stores/login';
 import router from '../router';
 
@@ -9,6 +9,12 @@ loginStore.$subscribe((mutation, state) => {
   if (state.loggedIn) {
     router.push('/dashboard');
   }
+});
+
+const usernameInputElRef = ref(null);
+
+onMounted(() => {
+  usernameInputElRef.value.focus();
 });
 
 const username = ref('');
@@ -24,7 +30,7 @@ const login = () => {
     <div class="form">
       <div class="input">
         <span>USERNAME</span>
-        <input type="text" v-model="username" placeholder="Enter your username or email" />
+        <input type="text" ref="usernameInputElRef" v-model="username" placeholder="Enter your username or email" />
       </div>
 
       <div class="input">
