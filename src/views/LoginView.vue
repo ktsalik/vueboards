@@ -57,9 +57,10 @@ const login = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: $component-padding;
     border-radius: 10px;
-    background-color: #FFFFFF;
+    background-color: $component-background-color;
+    color: $component-text-color;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
     .input {
@@ -74,8 +75,6 @@ const login = () => {
       }
 
       input {
-        outline: none;
-        border: none;
         width: 275px;
         margin-top: 5px;
         padding: 10px 15px;
@@ -83,22 +82,14 @@ const login = () => {
         border-radius: 27px;
         color: #333333;
         font-size: 14px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
       }
     }
 
     .btn-login {
-      outline: none;
-      border: none;
       width: 295px;
       margin-top: 20px;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: $primary-color;
-      color: $primary-text-color;
-      font-size: 16px;
-      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-      cursor: pointer;
+      @include button();
     }
 
     .message {

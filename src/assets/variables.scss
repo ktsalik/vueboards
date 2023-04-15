@@ -3,3 +3,19 @@ $app-text-color: #333333;
 $primary-color: #43bd87;
 $primary-text-color: #FFFFFF;
 $muted-text-color: #888888;
+$component-background-color: #FFFFFF;
+$component-text-color: #333333;
+$component-padding: 30px;
+$window-background-color: #FFFFFF;
+$window-text-color: #333333;
+$window-padding: 40px;
+
+@mixin button() {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: $primary-color;
+  color: $primary-text-color;
+  font-size: 15px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  cursor: pointer;
+}

@@ -1,1 +1,6 @@
 @import './base.css';
+
+input, button {
+  outline: none;
+  border: none;
+}
