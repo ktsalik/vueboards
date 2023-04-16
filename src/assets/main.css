@@ -4,3 +4,11 @@ input, button {
   outline: none;
   border: none;
 }
+
+.hide {
+  visibility: hidden !important;
+}
+
+.d-none {
+  display: none !important;
+}
