@@ -65,7 +65,7 @@ export default {
     max-width: calc(100% - ($window-padding * 2) - ($window-padding * 2));
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     padding: $window-padding;
     border-radius: 10px;
     background-color: $window-background-color;

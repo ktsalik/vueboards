@@ -336,6 +336,10 @@ dashboardStore.$subscribe((mutation, state) => {
 
   .board-settings-window {
 
+    .content {
+      width: 425px;
+    }
+
     .title {
       font-size: 18px;
       font-weight: bold;
@@ -343,6 +347,9 @@ dashboardStore.$subscribe((mutation, state) => {
 
     .controls {
       flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
 
       .change-name-input {
         display: flex;
@@ -369,6 +376,7 @@ dashboardStore.$subscribe((mutation, state) => {
         @include button();
         @include button_sm();
         width: 100%;
+        max-width: 220px;
         margin-top: 10px;
 
         span {
@@ -380,6 +388,7 @@ dashboardStore.$subscribe((mutation, state) => {
     .btn-close {
       @include button();
       @include button_neutral();
+      align-self: center;
       padding-left: 30px;
       padding-right: 30px;
     }
