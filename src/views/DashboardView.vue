@@ -8,9 +8,12 @@ import request from '../request';
 
 const loginStore = useLoginStore();
 const dashboardStore = useDashboardStore();
+const checkingCredentials = ref(false);
 if (!loginStore.loggedIn) {
   const key = localStorage.getItem('key');
   if (key) {
+    checkingCredentials.value = true;
+
     request.get(`/api?key=${key}`).then((response) => {
       if (response.data.code === 401) {
         router.push('/login');
@@ -19,6 +22,7 @@ if (!loginStore.loggedIn) {
           loggedIn: true,
           key,
         });
+        checkingCredentials.value = false;
         dashboardStore.fetchBoards();
       }
     });
@@ -101,7 +105,6 @@ const updateBoardName = () => {
       name: newBoardName.value,
       key: loginStore.key,
     }).then((response) => {
-      console.log(response.data);
       dashboardStore.fetchBoards().then(() => {
         updatingBoardName.value = false;
       });
@@ -117,7 +120,7 @@ dashboardStore.$subscribe((mutation, state) => {
 </script>
 
 <template>
-  <div class="Dashboard">
+  <div class="Dashboard" v-if="!checkingCredentials">
     <button class="btn-new-board" @click="onNewBoardClick">
       <font-awesome-icon icon="fa-solid fa-plus" />
       <span>New Board</span>
