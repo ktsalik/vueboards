@@ -9,6 +9,8 @@ $component-padding: 30px;
 $window-background-color: #FFFFFF;
 $window-text-color: #333333;
 $window-padding: 40px;
+$button-neutral-background-color: #CCCCCC;
+$button-neutral-text-color: #333333;
 
 @mixin button() {
   padding: 10px;
