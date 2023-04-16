@@ -47,7 +47,7 @@ const createBoard = () => {
   if (!creatingBoard.value && newBoardName.value.length > 0) {
     creatingBoard.value = true;
 
-    request.post('api/create-board', {
+    request.post('api/boards/new', {
       name: newBoardName.value,
       key: loginStore.key,
     }).then((response) => {
