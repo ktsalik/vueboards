@@ -59,17 +59,14 @@ const login = () => {
   align-items: center;
 
   .form {
+    @include component();
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: $component-padding;
-    border-radius: 10px;
-    background-color: $component-background-color;
-    color: $component-text-color;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
     .input {
+      width: 100%;
       display: flex;
       flex-direction: column;
       margin: 10px 0;
@@ -82,6 +79,7 @@ const login = () => {
 
       input {
         width: 275px;
+        max-width: calc(100% - 15px - 15px);
         margin-top: 5px;
         padding: 10px 15px;
         background-color: #F0F0F0;
@@ -94,6 +92,7 @@ const login = () => {
 
     .btn-login {
       width: 295px;
+      max-width: 100%;
       margin-top: 20px;
       @include button();
     }
@@ -102,6 +101,18 @@ const login = () => {
       height: 15px;
       margin-top: 10px;
       color: $muted-text-color;
+    }
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .Login {
+
+    .form {
+
+      .message {
+        font-size: 10px;
+      }
     }
   }
 }
