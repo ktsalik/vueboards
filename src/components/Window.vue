@@ -1,6 +1,6 @@
 <script>
 export default {
-  props: ['open', 'onClose'],
+  props: ['open', 'onClose', 'fullHeight'],
   created() {
     this.onWindowKeydown = (e) => {
       if (e.code === 'Escape') {
@@ -28,10 +28,10 @@ export default {
 </script>
 
 <template>
-  <div class="Window" :class="{ 'open': open }">
+  <div class="Window" :class="{ 'open': open, 'full-height': fullHeight }">
     <div class="content">
       <button
-        class="btn-close"
+        class="icon-close"
         @click="onClose"
       >
         <font-awesome-icon icon="fa-solid fa-times" />
@@ -71,7 +71,7 @@ export default {
     background-color: $window-background-color;
     color: $window-text-color;
 
-    .btn-close {
+    .icon-close {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -79,6 +79,13 @@ export default {
       font-size: 22px;
       color: $window-text-color;
       cursor: pointer;
+    }
+  }
+
+  &.full-height {
+    
+    .content {
+      height: calc(100% - ($window-padding * 2) - ($window-padding * 2));
     }
   }
 }
