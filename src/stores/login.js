@@ -17,6 +17,7 @@ export const useLoginStore = defineStore('login', () => {
       if (response.data.code === 200) {
         loggedIn.value = true;
         key.value = response.data.key;
+        localStorage.setItem('key', key.value);
       } else if (response.data.status === 'error') {
         loginMessage.value = response.data.message;
       }

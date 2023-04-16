@@ -9,7 +9,22 @@ import request from '../request';
 const loginStore = useLoginStore();
 const dashboardStore = useDashboardStore();
 if (!loginStore.loggedIn) {
-  router.push('/login');
+  const key = localStorage.getItem('key');
+  if (key) {
+    request.get(`/api?key=${key}`).then((response) => {
+      if (response.data.code === 401) {
+        router.push('/login');
+      } else {
+        loginStore.$patch({
+          loggedIn: true,
+          key,
+        });
+        dashboardStore.fetchBoards();
+      }
+    });
+  } else {
+    router.push('/login');
+  }
 } else {
   dashboardStore.fetchBoards();
 }
