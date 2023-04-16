@@ -1,8 +1,13 @@
 @import './base.css';
 
 input, button {
+  all: none;
   outline: none;
   border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0;
 }
 
 .hide {
