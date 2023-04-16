@@ -16,8 +16,11 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const loginStore = useLoginStore();
     fetchingBoards.value = true;
     request.get(`api/boards?key=${loginStore.key}`).then((response) => {
-      boards.value = response.data;
-      fetchingBoards.value = false;
+      if (response.data.constructor === Array) {
+        boards.value = response.data;
+        fetchingBoards.value = false;
+      }
+
       resolveFn();
     }).catch((err) => {
       rejectFn(err);

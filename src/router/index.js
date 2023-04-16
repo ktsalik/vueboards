@@ -20,6 +20,11 @@ const router = createRouter({
       name: 'default',
       component: DashboardView,
     },
+    // {
+    //   path: '/:pathMatch(.*)*',
+    //   name: 'default',
+    //   component: DashboardView,
+    // },
   ],
 });
 

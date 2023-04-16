@@ -7,7 +7,7 @@ const loginStore = useLoginStore();
 
 loginStore.$subscribe((mutation, state) => {
   if (state.loggedIn) {
-    router.push('/dashboard');
+    router.push('/');
   }
 });
 

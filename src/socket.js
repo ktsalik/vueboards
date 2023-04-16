@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
 
-export const state = reactive({
+export const socketState = reactive({
   connected: false,
 });
 
@@ -10,9 +10,9 @@ const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhos
 export const socket = io(URL);
 
 socket.on("connect", () => {
-  state.connected = true;
+  socketState.connected = true;
 });
 
 socket.on("disconnect", () => {
-  state.connected = false;
+  socketState.connected = false;
 });

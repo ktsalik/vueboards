@@ -1,5 +1,4 @@
 <script setup>
-import router from '../router';
 import { useLoginStore } from '../stores/login';
 import { useDashboardStore } from '../stores/dashboard';
 import { ref } from 'vue';
@@ -8,28 +7,7 @@ import request from '../request';
 
 const loginStore = useLoginStore();
 const dashboardStore = useDashboardStore();
-const checkingCredentials = ref(false);
-if (!loginStore.loggedIn) {
-  const key = localStorage.getItem('key');
-  if (key) {
-    checkingCredentials.value = true;
-
-    request.get(`/api?key=${key}`).then((response) => {
-      if (response.data.code === 401) {
-        router.push('/login');
-      } else {
-        loginStore.$patch({
-          loggedIn: true,
-          key,
-        });
-        checkingCredentials.value = false;
-        dashboardStore.fetchBoards();
-      }
-    });
-  } else {
-    router.push('/login');
-  }
-} else {
+if (dashboardStore.boards.length === 0) {
   dashboardStore.fetchBoards();
 }
 
@@ -120,7 +98,7 @@ dashboardStore.$subscribe((mutation, state) => {
 </script>
 
 <template>
-  <div class="Dashboard" v-if="!checkingCredentials">
+  <div class="Dashboard">
     <button class="btn-new-board" @click="onNewBoardClick">
       <font-awesome-icon icon="fa-solid fa-plus" />
       <span>New Board</span>

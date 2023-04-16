@@ -1,10 +1,41 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { state, socket } from "@/socket";
+import { socketState, socket } from "@/socket";
+import request from './request';
+import { useLoginStore } from './stores/login';
+import router from './router';
+import { reactive } from 'vue';
+
+const loginStore = useLoginStore();
+
+const state = reactive({
+  initialized: false,
+});
 
 socket.on('foo', (data) => {
   console.log(data);
 });
+
+const key = localStorage.getItem('key');
+if (key) {
+  request.get(`/api?key=${key}`).then((response) => {
+    if (response.data.code === 401) {
+      router.push('/login');
+    } else {
+      loginStore.$patch({
+        loggedIn: true,
+        key,
+      });
+
+      router.push('/'); 
+    }
+
+    state.initialized = true;
+  });
+} else {
+  router.push('/login');
+  state.initialized = true;
+}
 </script>
 
 <template>
@@ -14,7 +45,7 @@ socket.on('foo', (data) => {
     </div>
   </header>
 
-  <main>
+  <main v-if="state.initialized">
     <RouterView />
   </main>
 </template>
