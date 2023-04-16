@@ -30,12 +30,12 @@ const login = () => {
     <div class="form">
       <div class="input">
         <span>USERNAME</span>
-        <input type="text" ref="usernameInputElRef" v-model="username" placeholder="Enter your username or email" />
+        <input type="text" ref="usernameInputElRef" v-model="username" @keyup.enter="login" placeholder="Enter your username or email" />
       </div>
 
       <div class="input">
         <span>PASSWORD</span>
-        <input type="password" v-model="password" placeholder="********" />
+        <input type="password" v-model="password" @keyup.enter="login" placeholder="********" />
       </div>
 
       <span class="message">
