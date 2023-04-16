@@ -109,6 +109,14 @@ dashboardStore.$subscribe((mutation, state) => {
     </button>
 
     <div class="boards-list">
+      <div
+        v-if="!dashboardStore.fetchingBoards && dashboardStore.boards.length > 0"
+        class="boards-list__header"
+      >
+        <span>BOARD NAME</span>
+        <span>SETTINGS</span>
+      </div>
+
       <div v-for="board in dashboardStore.boards" class="board-list__item">
         <span class="name">{{ board.name }}</span>
         
@@ -243,6 +251,21 @@ dashboardStore.$subscribe((mutation, state) => {
     flex-direction: column;
     overflow-y: auto;
     margin-top: 20px;
+    padding-top: 0;
+
+    .boards-list__header {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0;
+      background-color: $component-background-color;
+
+      span {
+        font-size: 10px;
+        font-weight: bold;
+      }
+    }
 
     .board-list__item {
       display: flex;
