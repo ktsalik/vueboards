@@ -41,7 +41,7 @@ socket.on('foo', (data) => {
   }
 
   main {
-    flex: 1;
+    height: calc(100vh - 75px);
   }
 }
 </style>
