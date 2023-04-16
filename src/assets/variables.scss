@@ -19,6 +19,17 @@ $window-padding: 40px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   cursor: pointer;
 }
+
+@mixin button_sm() {
+  padding: 7px;
+  font-size: 13px;
+}
+
+@mixin button_neutral() {
+  background-color: $button-neutral-background-color;
+  color: $button-neutral-text-color;
+}
+
 @mixin styled_scrollbar() {
   &::-webkit-scrollbar {
     width: 5px;
