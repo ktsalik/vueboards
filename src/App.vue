@@ -24,7 +24,7 @@ socket.on('foo', (data) => {
 
 #app {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: $app-background-color;
@@ -41,7 +41,7 @@ socket.on('foo', (data) => {
   }
 
   main {
-    height: calc(100vh - 75px);
+    flex: 1;
   }
 }
 </style>
