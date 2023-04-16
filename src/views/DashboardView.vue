@@ -137,7 +137,7 @@ dashboardStore.$subscribe((mutation, state) => {
         class="fetching-boards-message"
       >
         <font-awesome-icon icon="fa-solid fa-circle-notch" size="2x" spin />
-        <span>Unpacking your boards</span>
+        <span>Unpacking boards</span>
       </div>
     </div>
 
