@@ -75,4 +75,8 @@ if (key) {
     flex: 1;
   }
 }
+
+a {
+  color: $app-text-color;
+}
 </style>

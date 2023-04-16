@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import LoginView from '../views/LoginView.vue'
+import BoardView from '../views/BoardView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,9 +17,9 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/:pathMatch(.*)*',
-      name: 'default',
-      component: DashboardView,
+      path: '/boards/:boardId',
+      name: 'board',
+      component: BoardView,
     },
     // {
     //   path: '/:pathMatch(.*)*',

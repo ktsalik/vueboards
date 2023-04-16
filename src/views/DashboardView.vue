@@ -114,7 +114,7 @@ dashboardStore.$subscribe((mutation, state) => {
       </div>
 
       <div v-for="board in dashboardStore.boards" class="board-list__item">
-        <span class="name">{{ board.name }}</span>
+        <router-link :to="`/boards/${board.id}`" class="name">{{ board.name }}</router-link>
         
         <button
           class="btn-settings"
@@ -271,24 +271,9 @@ dashboardStore.$subscribe((mutation, state) => {
       padding: 10px;
       border-radius: 5px;
       box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
-      cursor: pointer;
 
       &:last-of-type {
         margin-bottom: 0;
-      }
-
-      &:hover {
-        background-color: $primary-color;
-        color: $primary-text-color;
-        text-shadow: none;
-
-        .btn-settings {
-          color: $primary-text-color;
-        }
-      }
-
-      .name {
-        
       }
 
       .btn-settings {
