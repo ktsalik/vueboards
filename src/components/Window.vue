@@ -73,8 +73,8 @@ export default {
 
     .icon-close {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 15px;
+      right: 15px;
       background-color: transparent;
       font-size: 22px;
       color: $window-text-color;

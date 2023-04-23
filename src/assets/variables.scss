@@ -38,6 +38,34 @@ $button-neutral-text-color: #333333;
   font-size: 13px;
 }
 
+@mixin button_xs() {
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+@mixin button_outline($type: 'primary') {
+  border: 1px solid $primary-color;
+  background-color: transparent;
+  box-shadow: none;
+  color: $primary-color;
+
+  &:hover {
+    background-color: $primary-color;
+    color: $primary-text-color;
+  }
+
+  @if $type == neutral {
+    color: $button-neutral-text-color;
+    border-color: $button-neutral-background-color;
+    
+    &:hover {
+      background-color: $button-neutral-background-color;
+      color: $button-neutral-text-color;
+    }
+  }
+}
+
 @mixin button_neutral() {
   background-color: $button-neutral-background-color;
   color: $button-neutral-text-color;
@@ -46,6 +74,7 @@ $button-neutral-text-color: #333333;
 @mixin styled_scrollbar() {
   &::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
   }
 
   &::-webkit-scrollbar-track {

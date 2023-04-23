@@ -16,8 +16,8 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const loginStore = useLoginStore();
     fetchingBoards.value = true;
     request.get(`api/boards?key=${loginStore.key}`).then((response) => {
-      if (response.data.constructor === Array) {
-        boards.value = response.data;
+      if (response.data.code === 200) {
+        boards.value = response.data.data;
         fetchingBoards.value = false;
       }
 

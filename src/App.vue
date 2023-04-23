@@ -72,11 +72,12 @@ if (key) {
   }
 
   main {
-    flex: 1;
+    width: 100%;
+    height: calc(100% - 75px);
   }
 }
 
-a {
+a, button {
   color: $app-text-color;
 }
 </style>

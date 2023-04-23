@@ -242,7 +242,7 @@ dashboardStore.$subscribe((mutation, state) => {
     @include component();
     @include styled_scrollbar();
     width: 425px;
-    height: calc(75vh - 75px - $component-padding * 2 - $component-padding * 2);
+    height: calc(100% - 20px - $component-padding * 2 - $component-padding * 2);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
