@@ -146,7 +146,6 @@ export default {
         <option value="bug">Bug</option>
         <option value="chore">Chore</option>
         <option value="release">Release</option>
-        <option value="other">Other</option>
       </select>
     </div>
 
