@@ -4,12 +4,17 @@ import { useDashboardStore } from '../stores/dashboard';
 import { ref } from 'vue';
 import Window from '../components/Window.vue';
 import request from '../request';
+import { useRouter } from 'vue-router';
 
 const loginStore = useLoginStore();
 const dashboardStore = useDashboardStore();
-if (dashboardStore.boards.length === 0) {
-  dashboardStore.fetchBoards();
+const router = useRouter();
+
+if (!loginStore.loggedIn) {
+  router.push('/login');  
 }
+
+dashboardStore.fetchBoards();
 
 const newBoardNameInputRef = ref(null);
 const showNewBoardDialog = ref(false);
@@ -95,6 +100,17 @@ dashboardStore.$subscribe((mutation, state) => {
     boardSelected.value = state.boards.find((b) => b.id === boardSelectedId.value);
   }
 });
+
+const logout = () => {
+  localStorage.removeItem('key');
+  
+  loginStore.$patch({
+    key: null,
+    loggedIn: false,
+  });
+
+  router.push('/login');
+};
 </script>
 
 <template>
@@ -215,6 +231,11 @@ dashboardStore.$subscribe((mutation, state) => {
         Close
       </button>
     </Window>
+
+    <button
+      class="btn-logout"
+      @click="logout"
+    >Logout</button>
   </div>
 </template>
 
@@ -222,6 +243,7 @@ dashboardStore.$subscribe((mutation, state) => {
 @import '../assets/variables.scss';
 
 .Dashboard {
+  position: relative;
   width: 1280px;
   max-width: 100%;
   height: 100%;
@@ -396,6 +418,15 @@ dashboardStore.$subscribe((mutation, state) => {
       padding-left: 30px;
       padding-right: 30px;
     }
+  }
+
+  .btn-logout {
+    @include button();
+    @include button_outline(neutral);
+    @include button_xs();
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>
