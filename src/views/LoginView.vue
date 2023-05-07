@@ -23,11 +23,17 @@ const password = ref('');
 const login = () => {
   loginStore.login(username.value, password.value);
 };
+
+const viewDemo = () => {
+  loginStore.login(Math.random().toString().slice(-5), Math.random().toString().slice(-5));
+};
 </script>
 
 <template>
   <div class="Login">
     <div class="form">
+      <span class="title">Login and register in one step</span>
+
       <div class="input">
         <span>USERNAME</span>
         <input type="text" ref="usernameInputElRef" v-model="username" @keyup.enter="login" placeholder="Enter your username or email" />
@@ -44,6 +50,8 @@ const login = () => {
 
       <button class="btn-login" @click="login">Login</button>
     </div>
+
+    <button class="btn-view-demo" @click="viewDemo">View Demo</button>
   </div>
 </template>
 
@@ -51,6 +59,7 @@ const login = () => {
 @import '../assets/variables.scss';
 
 .Login {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -65,6 +74,13 @@ const login = () => {
     justify-content: center;
     align-items: center;
 
+    .title {
+      align-self: flex-start;
+      margin-left: 10px;
+      margin-bottom: 15px;
+      font-size: 11px;
+    }
+    
     .input {
       width: 100%;
       display: flex;
@@ -102,6 +118,16 @@ const login = () => {
       margin-top: 10px;
       color: $muted-text-color;
     }
+  }
+
+  .btn-view-demo {
+    @include button();
+    @include button_outline();
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 150px;
+    max-width: calc(100% - 20px - 20px);
   }
 }
 
