@@ -40,9 +40,11 @@ if (key) {
 
 <template>
   <header>
-    <div class="logo">
+    <RouterLink to="/" class="logo">
       Vueboards
-    </div>
+    </RouterLink>
+
+    <span style="font-size: 11px">This app exists for demonstration reasons. All data stored will rollback after 15 minutes of inactivity.</span>
   </header>
 
   <main v-if="state.initialized">
@@ -62,6 +64,8 @@ if (key) {
   color: $app-text-color;
 
   header {
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
 
     .logo {
@@ -74,6 +78,15 @@ if (key) {
   main {
     width: 100%;
     height: calc(100% - 75px);
+  }
+}
+
+@media screen and (max-width: 425px) {
+  #app {
+
+    header {
+      flex-direction: column;
+    }
   }
 }
 
