@@ -1,10 +1,11 @@
 <script setup>
-import { reactive, ref, nextTick } from 'vue';
+import { reactive, ref, nextTick, onUnmounted, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import request from '../request';
 import { useLoginStore } from '../stores/login';
 import ContextMenu from '../components/ContextMenu.vue';
 import StoryCard from '../components/StoryCard.vue';
+import initializeStoryCardDrag from '../StoryCardDrag';
 
 const loginStore = useLoginStore();
 const route = useRoute();
@@ -46,7 +47,6 @@ const saveColumn = () => {
       name: columnToSave.name,
       key: loginStore.key,
     }).then((response) => {
-      getBoard();
       columnToSave.editingName = false;
     });
   } else {
@@ -54,7 +54,8 @@ const saveColumn = () => {
       name: columnToSave.name,
       key: loginStore.key,
     }).then((response) => {
-      getBoard();
+      columnToSave.id = response.data.data.newColumnId;
+      columnToSave.stories = [];
       columnToSave.editingName = false;
       state.addingNewColumn = false;
     });
@@ -72,7 +73,7 @@ const onEditColumnName = (column) => {
   column.showSettingsMenu = false;
   
   nextTick(() => {
-    element.value.querySelector('.column[id="' + column.id + '"] .input-name').select();
+    element.value.querySelector('[id="column-' + column.id + '"] .input-name').select();
   });
 };
 
@@ -80,13 +81,16 @@ const removeColumn = (columnId) => {
   request.post(`api/boards/${state.board.id}/columns/${columnId}/delete`, {
     key: loginStore.key,
   }).then((response) => {
-    getBoard();
+    if (response.data.status === 'ok') {
+      state.board.columns.splice(state.board.columns.findIndex((c) => c.id === columnId), 1);
+    }
   });
 };
 
 const addNewStory = (column) => {
   column.stories.push({
     name: '',
+    isNewStory: true,
   });
 };
 
@@ -103,7 +107,7 @@ const onStorySave = (column, index) => {
       description: story.description,
       key: loginStore.key,
     }).then((response) => {
-      getBoard();
+
     });
   } else {
     request.post(`api/boards/${state.board.id}/columns/${column.id}/stories/add`, {
@@ -111,7 +115,11 @@ const onStorySave = (column, index) => {
       description: story.description,
       key: loginStore.key,
     }).then((response) => {
-      getBoard();
+      if (response.data.status === 'ok') {
+        column.stories[index] = {
+          ...response.data.data.story,
+        };
+      }
     });
   }
 };
@@ -123,9 +131,28 @@ const onStorySaveDescription = (column, index) => {
     description: story.description,
     key: loginStore.key,
   }).then((response) => {
-    getBoard();
+    
   });
 };
+
+const { onStoryCardMouseDown, onWindowMouseMove, onWindowMouseUp } = initializeStoryCardDrag(element, (change) => {
+  request.post(`api/boards/${state.board.id}/columns/${change.fromColumnId}/stories/${change.storyId}/move/${change.toColumnId}`, {
+    position: change.position,
+    key: loginStore.key,
+  }).then((response) => {
+    getBoard();
+  });
+});
+
+onMounted(() => {
+  window.addEventListener('mousemove', onWindowMouseMove);
+  window.addEventListener('mouseup', onWindowMouseUp);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', onWindowMouseMove);
+  window.removeEventListener('mouseup', onWindowMouseUp);
+});
 
 getBoard();
 </script>
@@ -135,7 +162,10 @@ getBoard();
     v-if="state.board"
     ref="element"
   >
-    <div class="left">
+    <div
+      class="left"
+      :class="{ 'no-columns': state.board.columns.length === 0 }"
+    >
       <div class="board-name">{{ state.board.name }}</div>
 
       <div class="menu">
@@ -150,7 +180,7 @@ getBoard();
       </div>
     </div>
 
-    <div v-for="(column, index) in state.board.columns" class="column" :id="column.id">
+    <div v-for="(column, index) in state.board.columns" class="column" :id="'column-' + column.id">
       <div class="header">
         <input
           v-if="column.editingName"
@@ -179,7 +209,7 @@ getBoard();
             class="btn-settings"
             @click="onColumnSettingsClick($event, column)"
           >
-            <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
+            <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" size="lg" />
 
             <ContextMenu
               :open="column.showSettingsMenu"
@@ -204,10 +234,13 @@ getBoard();
 
       <div class="stories-list">
         <StoryCard v-for="(story, index) in column.stories"
+          :key="story.id"
+          :id="'story-' + story.id"
           :data="story"
           @save="onStorySave(column, index)"
           @saveDescription="onStorySaveDescription(column, index)"
           @cancel="onStoryCancel(column, index)"
+          @mousedown="$event => onStoryCardMouseDown($event, column, index)"
         ></StoryCard>
       </div>
     </div>
@@ -221,10 +254,14 @@ getBoard();
 .Board {
   @include styled_scrollbar();
   max-width: calc(100% - $component-padding - $component-padding);
-  height: calc(100% - $component-padding - $component-padding);
+  height: calc(100% - $component-padding);
   display: flex;
   overflow-x: auto;
   padding: $component-padding;
+  padding-top: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 
   .left {
     max-width: 300px;
@@ -235,7 +272,7 @@ getBoard();
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: $component-padding / 2;
+      padding: calc($component-padding / 2);
       border-radius: $component-border-radius;
       background-color: $component-background-color;
       box-shadow: $component-box-shadow;
@@ -247,7 +284,7 @@ getBoard();
       display: flex;
       flex-direction: column;
       margin-top: 20px;
-      padding: $component-padding / 2;
+      padding: calc($component-padding / 2);
       border-radius: $component-border-radius;
       background-color: $component-background-color;
       box-shadow: $component-box-shadow;
@@ -269,7 +306,7 @@ getBoard();
     @include component();
     @include styled_scrollbar();
     min-width: 300px;
-    height: calc(100% - $component-padding - $component-padding);
+    height: calc(100% - $component-padding);
     overflow-y: auto;
     margin-left: 20px;
     padding-top: 0;
@@ -280,9 +317,10 @@ getBoard();
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: $component-padding / 2;
-      padding-bottom: $component-padding / 2;
+      padding-top: calc($component-padding / 2);
+      padding-bottom: calc($component-padding / 2);
       background-color: $component-background-color;
+      z-index: 10;
 
       .input-name {
         width: calc(100% - 10px - 10px);
@@ -329,11 +367,13 @@ getBoard();
     }
 
     .stories-list {
+      position: relative;
       display: flex;
       flex-direction: column;
       margin-top: 10px;
       padding-left: 5px;
       padding-right: 5px;
+      z-index: 5;
 
       .Story {
         margin: 8px 0;
@@ -347,6 +387,10 @@ getBoard();
 
     .left {
       display: none;
+
+      &.no-columns {
+        display: flex;
+      }
     }
 
     .column {
