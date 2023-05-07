@@ -49,11 +49,6 @@ export default {
     },
   },
   methods: {
-    onElementClick() {
-      if (this.open === false) {
-        this.open = true;
-      }
-    },
     onToggleOpen(e) {
       this.open = !this.open;
       e.stopPropagation();
@@ -65,13 +60,18 @@ export default {
         this.$refs.element.querySelector('.input-name').select();
       });
     },
-    onEditNameEnterPressed() {
+    save() {
+      this.data.description = this.currentDescription;
       this.$emit('save');
-      this.editingName = false
+    },
+    onEditNameEnterPressed() {
+      this.save();
+      this.editingName = false;
     },
     onUpdateDescriptionClick() {
       this.data.description = this.currentDescription;
       this.$emit('save-description');
+      this.descriptionChanged = false;
     }
   },
 };
@@ -82,7 +82,6 @@ export default {
     class="Story"
     :class="{ 'open': open }"
     ref="element"
-    @click="onElementClick"
   >
     <div class="name-wrapper">
       <button
@@ -104,6 +103,7 @@ export default {
       <span
         v-if="!editingName"
         class="name"
+        @click="onToggleOpen"
       >{{ data.name }}</span>
 
       <button
@@ -122,7 +122,7 @@ export default {
       <button
         :class="{ 'hide': data.name.trim().length === 0 }"
         class="btn-save"
-        @click="$emit('save')"
+        @click="save"
       >
         Save
       </button>
@@ -134,6 +134,51 @@ export default {
       >
         Cancel
       </button>
+    </div>
+
+    <div
+      v-if="open"
+      class="type-container"
+    >
+      <span>Type: </span>
+      <select v-model="data.type">
+        <option value="feature">Feature</option>
+        <option value="bug">Bug</option>
+        <option value="chore">Chore</option>
+        <option value="release">Release</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div
+      v-if="open"
+      class="points-container"
+    >
+      <span>Points: </span>
+      <select v-model="data.points">
+        <option value="-1">No points</option>
+        <option value="0">0 points</option>
+        <option value="1">1 point</option>
+        <option value="2">2 points</option>
+        <option value="3">3 points</option>
+        <option value="4">4 points</option>
+        <option value="5">5 points</option>
+      </select>
+    </div>
+
+    <div
+      v-if="open"
+      class="state-container"
+    >
+      <span>State: </span>
+      <select v-model="data.state">
+        <option value="-1">Rejected</option>
+        <option value="0">Unstarted</option>
+        <option value="1">Started</option>
+        <option value="2">Finished</option>
+        <option value="3">Delivered</option>
+        <option value="4">Accepted</option>
+      </select>
     </div>
 
     <div
@@ -166,9 +211,11 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   border-radius: 5px;
+  background-color: $component-background-color;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   font-size: 14px;
   cursor: pointer;
+  z-index: 1;
 
   &.open {
     padding: 7px;
@@ -196,6 +243,7 @@ export default {
       flex: 1;
       padding: 8px;
       padding-left: 10px;
+      cursor: pointer;
     }
 
     .btn-edit-name {
@@ -215,6 +263,14 @@ export default {
     @include button_outline('neutral');
     @include button_sm();
     margin-left: 5px;
+  }
+
+  .type-container, .points-container, .state-container {
+    width: calc(100% - 10px - 10px);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 10px;
   }
 
   .description-wrapper {
