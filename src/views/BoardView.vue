@@ -104,6 +104,9 @@ const onStorySave = (column, index) => {
   if (story.id) {
     request.post(`api/boards/${state.board.id}/columns/${column.id}/stories/${story.id}/update`, {
       name: story.name,
+      type: story.type,
+      points: story.points,
+      state: story.state,
       description: story.description,
       key: loginStore.key,
     }).then((response) => {
@@ -112,6 +115,9 @@ const onStorySave = (column, index) => {
   } else {
     request.post(`api/boards/${state.board.id}/columns/${column.id}/stories/add`, {
       name: story.name,
+      type: story.type,
+      points: story.points,
+      state: story.state,
       description: story.description,
       key: loginStore.key,
     }).then((response) => {
@@ -306,6 +312,7 @@ getBoard();
     @include component();
     @include styled_scrollbar();
     min-width: 300px;
+    max-width: 300px;
     height: calc(100% - $component-padding);
     overflow-y: auto;
     margin-left: 20px;
