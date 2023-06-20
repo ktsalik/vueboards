@@ -3,6 +3,7 @@ import { useLoginStore } from '../stores/login';
 import { useDashboardStore } from '../stores/dashboard';
 import { ref } from 'vue';
 import Window from '../components/Window.vue';
+import AddUserComponent from '../components/AddUserComponent.vue';
 import request from '../request';
 import { useRouter } from 'vue-router';
 
@@ -122,7 +123,7 @@ const logout = () => {
 
     <div class="boards-list">
       <div
-        v-if="!dashboardStore.fetchingBoards && dashboardStore.boards.length > 0"
+        v-if="dashboardStore.boards.length > 0"
         class="boards-list__header"
       >
         <span>BOARD NAME</span>
@@ -149,7 +150,7 @@ const logout = () => {
       </div>
 
       <div
-        v-if="dashboardStore.fetchingBoards"
+        v-if="dashboardStore.fetchingBoards && dashboardStore.boards.length === 0"
         class="fetching-boards-message"
       >
         <font-awesome-icon icon="fa-solid fa-circle-notch" size="2x" spin />
@@ -212,7 +213,7 @@ const logout = () => {
           :class="{ 'hide': newBoardName.length === 0 || newBoardName === boardSelected.name }"
           @click="updateBoardName"
         >
-        <template v-if="!updatingBoardName">
+          <template v-if="!updatingBoardName">
             <font-awesome-icon icon="fa-solid fa-save" />
             <span>Save</span>
           </template>
@@ -222,6 +223,11 @@ const logout = () => {
             <span>Saving Changes</span>
           </template>
         </button>
+
+        <AddUserComponent
+          v-if="boardSelected"
+          :boardId="boardSelectedId"
+        ></AddUserComponent>
       </div>
 
       <button
@@ -293,6 +299,10 @@ const logout = () => {
       padding: 10px;
       border-radius: 5px;
       box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+      
+      a {
+        text-decoration: underline;
+      }
 
       &:last-of-type {
         margin-bottom: 0;

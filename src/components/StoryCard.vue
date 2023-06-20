@@ -68,6 +68,21 @@ export default {
       this.save();
       this.editingName = false;
     },
+    onTypeChange() {
+      if (this.data.id) {
+        this.save();
+      }
+    },
+    onPointsChange() {
+      if (this.data.id) {
+        this.save();
+      }
+    },
+    onStateChange() {
+      if (this.data.id) {
+        this.save();
+      }
+    },
     onUpdateDescriptionClick() {
       this.data.description = this.currentDescription;
       this.$emit('save-description');
@@ -140,12 +155,16 @@ export default {
       v-if="open"
       class="type-container"
     >
-      <span>Type: </span>
-      <select v-model="data.type">
+      <span>Type</span>
+      <select
+        v-model="data.type"
+        @change="onTypeChange"
+      >
         <option value="feature">Feature</option>
         <option value="bug">Bug</option>
         <option value="chore">Chore</option>
         <option value="release">Release</option>
+        <option value="other">Other</option>
       </select>
     </div>
 
@@ -153,8 +172,11 @@ export default {
       v-if="open"
       class="points-container"
     >
-      <span>Points: </span>
-      <select v-model="data.points">
+      <span>Points</span>
+      <select
+        v-model="data.points"
+        @change="onPointsChange"
+      >
         <option value="-1">No points</option>
         <option value="0">0 points</option>
         <option value="1">1 point</option>
@@ -169,8 +191,11 @@ export default {
       v-if="open"
       class="state-container"
     >
-      <span>State: </span>
-      <select v-model="data.state">
+      <span>State</span>
+      <select
+        v-model="data.state"
+        @change="onStateChange"
+      >
         <option value="-1">Rejected</option>
         <option value="0">Unstarted</option>
         <option value="1">Started</option>
@@ -268,8 +293,10 @@ export default {
     width: calc(100% - 10px - 10px);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 10px;
     padding: 0 10px;
+    font-size: 14px;
   }
 
   .description-wrapper {

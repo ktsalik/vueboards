@@ -6,6 +6,7 @@ import { useLoginStore } from '../stores/login';
 import ContextMenu from '../components/ContextMenu.vue';
 import StoryCard from '../components/StoryCard.vue';
 import initializeStoryCardDrag from '../StoryCardDrag';
+import { socketState, socket } from "../socket";
 
 const loginStore = useLoginStore();
 const route = useRoute();
@@ -150,7 +151,77 @@ const { onStoryCardMouseDown, onWindowMouseMove, onWindowMouseUp } = initializeS
   });
 });
 
+const onColumnAdd = (data) => {
+  const newColumn = {
+    id: data.id,
+    name: data.name,
+    stories: [],
+  };
+
+  state.board.columns.push(newColumn);
+};
+
+const onColumnUpdate = (data) => {
+  const columnIndex = state.board.columns.findIndex((c) => c.id === data.id);
+
+  if (columnIndex > -1) {
+    state.board.columns[columnIndex].name = data.name;
+  }
+};
+
+const onColumnDelete = (data) => {
+  const columnIndex = state.board.columns.findIndex((c) => c.id === data.id);
+
+  if (columnIndex > -1) {
+    state.board.columns.splice(columnIndex, 1);
+  }
+};
+
+const onStoryAdd = (data) => {
+  const columnIndex = state.board.columns.findIndex((c) => c.id === data.columnId);
+
+  if (columnIndex > -1) {
+    state.board.columns[columnIndex].stories.push(data.story);
+  }
+};
+
+const onStoryUpdate = (data) => {
+  const columnIndex = state.board.columns.findIndex((c) => c.id === data.columnId);
+
+  if (columnIndex > -1) {
+    const storyIndex = state.board.columns[columnIndex].stories.findIndex((s) => s.id === data.story.id);
+
+    if (storyIndex > -1) {
+      for (let key in data.story) {
+        state.board.columns[columnIndex].stories[storyIndex] = data.story;
+      }
+    }
+  }
+};
+
+const onStoryMove = (data) => {
+  getBoard();
+};
+
 onMounted(() => {
+  socket.on('board-change', (data) => {
+    if (data.boardId === parseInt(route.params.boardId)) {
+      if (data.type === 'column-add') {
+        onColumnAdd(data.data);
+      } else if (data.type === 'column-update') {
+        onColumnUpdate(data.data);
+      } else if (data.type === 'column-delete') {
+        onColumnDelete(data.data);
+      } else if (data.type === 'story-add') {
+        onStoryAdd(data.data);
+      } else if (data.type === 'story-update') {
+        onStoryUpdate(data.data);
+      } else if (data.type === 'story-move') {
+        onStoryMove(data.data);
+      }
+    }
+  });
+
   window.addEventListener('mousemove', onWindowMouseMove);
   window.addEventListener('mouseup', onWindowMouseUp);
 });
@@ -164,6 +235,13 @@ getBoard();
 </script>
 
 <template>
+  <div
+    v-if="state.board === null"
+    class="loading">
+    <font-awesome-icon icon="fa-solid fa-circle-notch" spin />
+    <span>Unpacking board</span>
+  </div>
+
   <div class="Board"
     v-if="state.board"
     ref="element"
@@ -256,6 +334,18 @@ getBoard();
 
 <style lang="scss">
 @import '../assets/variables.scss';
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    margin-left: 5px;
+  }
+}
 
 .Board {
   @include styled_scrollbar();

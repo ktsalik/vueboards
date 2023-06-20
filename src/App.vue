@@ -8,6 +8,20 @@ import { reactive } from 'vue';
 
 const loginStore = useLoginStore();
 
+let previousStateOfLoggedIn = false;
+loginStore.$subscribe((mutation, state) => {
+  if (state.loggedIn && previousStateOfLoggedIn !== state.loggedIn) {
+    if (!socket.connected) {
+      socket.once('connect', () => {
+        socket.emit('key', state.key);
+      });
+    } else {
+      socket.emit('key', state.key);
+    }
+  }
+  previousStateOfLoggedIn = state.loggedIn;
+});
+
 const state = reactive({
   initialized: false,
 });

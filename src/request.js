@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const baseURL = process.env.NODE_ENV === "production" ? 'https://vueboards.onrender.com' : "http://localhost:3001";
-// const baseURL = 'https://vueboards.onrender.com';
+
 const request = axios.create({
   baseURL,
 });
